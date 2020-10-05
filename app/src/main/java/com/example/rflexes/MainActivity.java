@@ -23,6 +23,11 @@ public class MainActivity extends AppCompatActivity {
         this.start = findViewById(R.id.start);
         this.lay = findViewById(R.id.lay);
 
+        Button cacthi = new Button(this);
+        //TODO
+        //Pool -> Garder un seul bouton et récupérer les temps dans des variables
+
+
         this.start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -30,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         start.setVisibility(View.GONE);
+                        /*
                         for (int i=0 ; i<5 ; i++){
                             int temps = 1000 + (int)(Math.random()*(5000-1000)+1);
                             int x = (int)(Math.random()*(200-0)+1);
@@ -39,18 +45,10 @@ public class MainActivity extends AppCompatActivity {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            Button cacthi = new Button(this);
-                            cacthi.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-
-                                }
-                            });
-
-
-
 
                         }
+
+                         */
                     }
                 }).start();
             }

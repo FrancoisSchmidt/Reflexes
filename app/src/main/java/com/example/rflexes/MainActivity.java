@@ -65,7 +65,12 @@ public class MainActivity extends AppCompatActivity {
                     tour ++;
                     startGame();
                 }else{
-                    serie.setText(String.valueOf(scores));
+                    double total = 0;
+                    for (Long note : scores) {
+                        total += note;
+                    }
+                    double moyenne = total / scores.size();
+                    serie.setText(String.valueOf(scores) + "\nMoyenne : "+String.valueOf(moyenne));
                     start.setVisibility(View.VISIBLE);
                 }
             }
@@ -81,14 +86,15 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         int temps = 1000 + (int) (Math.random() * (5000 - 1000) + 1);
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(temps);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        int x = (int) (Math.random() * (200 - 0) + 1);
-                        int y = (int) (Math.random() * (200 - 0) + 1);
-                        x =metrics.widthPixels/2;
-                        y=metrics.heightPixels/2;
+                        int W = metrics.widthPixels/2;
+                        int H = metrics.heightPixels/2;
+                        int x = (int) (Math.random() * (W - 0) + 1);
+                        int y = (int) (Math.random() * (H - 0) + 1);
+
                         catchi.setX(x);
                         catchi.setY(y);
                         catchi.setVisibility(View.VISIBLE);

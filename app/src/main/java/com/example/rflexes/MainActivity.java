@@ -103,8 +103,64 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }.start();
-
-
     }
+
+
+
+    //TODO
+    //Préparation du tableau des High Scores
+    /*
+    private void saveFav(String data, Context fileContext) {
+        //Méthode d'écriture sur un fichier .txt
+        try {
+            // Open Stream to write file.
+            FileOutputStream out = fileContext.openFileOutput("save.txt", Context.MODE_APPEND);
+            out.write(data.getBytes());
+            out.write("\n".getBytes());
+            out.close();
+        } catch (Exception e) {
+            //rien
+        }
+    }
+
+
+    private void majFav(Context fileContext){
+        //Permet d'actualiser les Array de sauvegarde en fonction du contecnu de save.txt
+        try {
+            FileInputStream in = fileContext.openFileInput("save.txt");
+
+            favoris = new ArrayList<Integer>();
+            BufferedReader br= new BufferedReader(new InputStreamReader(in));
+
+            String s= null;
+            while((s= br.readLine())!= null)  {
+                String deux[] = s.split(";");
+                int id1 = Integer.parseInt(deux[0]);
+                int id2 = Integer.parseInt(deux[1]);
+                favoris.add(id1);
+                favoris_ogg.add(id2);
+                favoris_txt.add(deux[2]);
+            }
+
+        } catch (Exception e) {
+            Toast.makeText(fileContext,"Error:"+ e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void erase(){
+        //Permet de réinitialiser le fichier de sauvegarde en recréant un fichier du même nom qui écrasera le précédent
+        try {
+            // Open Stream to write file.
+            FileOutputStream out = this.openFileOutput("save.txt", Context.MODE_PRIVATE);
+            out.close();
+        } catch (Exception e) {
+            //rien
+        }
+    }
+
+     */
+
+
+
 
 }

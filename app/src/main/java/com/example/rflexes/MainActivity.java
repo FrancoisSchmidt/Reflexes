@@ -32,12 +32,14 @@ public class MainActivity extends AppCompatActivity {
         this.serie = findViewById(R.id.serie);
         this.start = findViewById(R.id.start);
         this.lay = findViewById(R.id.lay);
-
-        this.catchi = new Button(this);
-        this.lay.addView(this.catchi);
-        this.catchi.setVisibility(View.INVISIBLE);
-
         this.scores = new ArrayList<Long>();
+
+        this.catchi = findViewById(R.id.catchi);
+
+        this.catchi.setVisibility(View.INVISIBLE);
+        /*this.lay.addView(this.catchi);
+        this.catchi.setWidth(50);
+        this.catchi.setHeight(50);*/
 
         this.metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(this.metrics);
@@ -95,9 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }.start();
-
-
-
 
 
     }

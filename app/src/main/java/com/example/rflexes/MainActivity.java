@@ -1,28 +1,38 @@
 package com.example.rflexes;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.text.InputType;
 import android.text.Layout;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     public TextView serie;
     public Button start;
+    public Button catchi;
+    public Button high_scores;
     public ConstraintLayout lay;
     public long starttime;
     public ArrayList<Long> scores;
-    public Button catchi;
     public long temps;
     public int tour;
     public DisplayMetrics metrics;
+    public AlertDialog.Builder nom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.serie = findViewById(R.id.serie);
         this.start = findViewById(R.id.start);
+        this.high_scores = findViewById(R.id.high_scores);
         this.lay = findViewById(R.id.lay);
         this.scores = new ArrayList<Long>();
 
@@ -44,12 +55,14 @@ public class MainActivity extends AppCompatActivity {
         this.metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(this.metrics);
 
+
         this.start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 tour = 0;
                 scores = new ArrayList<Long>();
                 start.setVisibility(View.GONE);
+                high_scores.setVisibility(View.GONE);
                 startGame();
             }
         });
@@ -66,13 +79,29 @@ public class MainActivity extends AppCompatActivity {
                     startGame();
                 }else{
                     double total = 0;
+                    double min = 100000;
                     for (Long note : scores) {
                         total += note;
+                        if (note<min){
+                            min = note;
+                        }
                     }
                     double moyenne = total / scores.size();
+
                     serie.setText(String.valueOf(scores) + "\nMoyenne : "+String.valueOf(moyenne));
                     start.setVisibility(View.VISIBLE);
+                    high_scores.setVisibility(View.VISIBLE);
+                    nomJoueur(moyenne, min);
                 }
+            }
+        });
+
+        this.high_scores.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
+                startActivity(intent);
+
             }
         });
     }
@@ -86,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         int temps = 1000 + (int) (Math.random() * (5000 - 1000) + 1);
                         try {
-                            Thread.sleep(temps);
+                            Thread.sleep(100);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -97,24 +126,52 @@ public class MainActivity extends AppCompatActivity {
 
                         catchi.setX(x);
                         catchi.setY(y);
-                        catchi.setVisibility(View.VISIBLE);
                         starttime = System.currentTimeMillis();
+                        catchi.setVisibility(View.VISIBLE);
                     }
                 });
             }
         }.start();
     }
 
+    public void nomJoueur(final double moyenne, final double best){
+        //Création de la boîte de dialogue qui demande le nom du joueur
+        this.nom = new AlertDialog.Builder(this);
+        nom.setTitle("Nom du joueur");
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        nom.setView(input);
+        nom.setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String s = input.getText().toString();
+                if (!s.equals("") && !s.equals(" ")) {
+                    //serie.setText(s);
+                    String score = s+" : " + String.valueOf(moyenne)+"ms";
+                    String score2 = s+" : " + String.valueOf(best)+"ms";
+                    save_moyenne(score,getApplicationContext());
+                    save_best(score2,getApplicationContext());
 
+                }
+            }
+        });
+        nom.setNeutralButton("Annuler", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        this.nom.show();
+    }
 
     //TODO
-    //Préparation du tableau des High Scores
-    /*
-    private void saveFav(String data, Context fileContext) {
+    //Préparation du tableau des High ScoreS
+
+    private void save_moyenne(String data, Context fileContext) {
         //Méthode d'écriture sur un fichier .txt
         try {
             // Open Stream to write file.
-            FileOutputStream out = fileContext.openFileOutput("save.txt", Context.MODE_APPEND);
+            FileOutputStream out = fileContext.openFileOutput("save_moy.txt", Context.MODE_APPEND);
             out.write(data.getBytes());
             out.write("\n".getBytes());
             out.close();
@@ -123,30 +180,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    private void majFav(Context fileContext){
-        //Permet d'actualiser les Array de sauvegarde en fonction du contecnu de save.txt
+    private void save_best(String data, Context fileContext) {
+        //Méthode d'écriture sur un fichier .txt
         try {
-            FileInputStream in = fileContext.openFileInput("save.txt");
-
-            favoris = new ArrayList<Integer>();
-            BufferedReader br= new BufferedReader(new InputStreamReader(in));
-
-            String s= null;
-            while((s= br.readLine())!= null)  {
-                String deux[] = s.split(";");
-                int id1 = Integer.parseInt(deux[0]);
-                int id2 = Integer.parseInt(deux[1]);
-                favoris.add(id1);
-                favoris_ogg.add(id2);
-                favoris_txt.add(deux[2]);
-            }
-
+            // Open Stream to write file.
+            FileOutputStream out = fileContext.openFileOutput("save_records.txt", Context.MODE_APPEND);
+            out.write(data.getBytes());
+            out.write("\n".getBytes());
+            out.close();
         } catch (Exception e) {
-            Toast.makeText(fileContext,"Error:"+ e.getMessage(),Toast.LENGTH_SHORT).show();
+            //rien
         }
     }
 
+/*
     private void erase(){
         //Permet de réinitialiser le fichier de sauvegarde en recréant un fichier du même nom qui écrasera le précédent
         try {

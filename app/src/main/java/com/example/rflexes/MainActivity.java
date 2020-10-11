@@ -8,11 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.text.InputType;
-import android.text.Layout;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,13 +19,13 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    public TextView serie;
+    public TextView affichage;
     public Button start;
     public Button catchi;
     public Button high_scores;
     public ConstraintLayout lay;
     public long starttime;
-    public ArrayList<Long> scores;
+    public ArrayList<Long> liste_scores;
     public long temps;
     public int tour;
     public DisplayMetrics metrics;
@@ -39,81 +36,77 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.serie = findViewById(R.id.serie);
-        this.start = findViewById(R.id.start);
-        this.high_scores = findViewById(R.id.high_scores);
-        this.lay = findViewById(R.id.lay);
-        this.scores = new ArrayList<Long>();
+        this.affichage = findViewById(R.id.affichage);      //Affichage des scores en haut à gauche de l'écran
+        this.start = findViewById(R.id.start);              //Bouton pour démarer une partie
+        this.high_scores = findViewById(R.id.high_scores);  //Bouton pour afficher les high_scores
+        this.lay = findViewById(R.id.lay);                  //Layout
+        this.liste_scores = new ArrayList<Long>();          //Liste contenant tous les scores d'une partie
 
-        this.catchi = findViewById(R.id.catchi);
+        this.catchi = findViewById(R.id.catchi);            //Bouton à presser le plus rapidement possible
+        this.catchi.setVisibility(View.INVISIBLE);          //Bouton invisible dès le début
 
-        this.catchi.setVisibility(View.INVISIBLE);
-        /*this.lay.addView(this.catchi);
-        this.catchi.setWidth(50);
-        this.catchi.setHeight(50);*/
-
-        this.metrics = new DisplayMetrics();
+        this.metrics = new DisplayMetrics();                //Récupération taille de l'écran
         getWindowManager().getDefaultDisplay().getMetrics(this.metrics);
 
 
-        this.start.setOnClickListener(new View.OnClickListener() {
+        this.start.setOnClickListener(new View.OnClickListener() {      //Bouton start
             @Override
             public void onClick(View view) {
-                tour = 0;
-                scores = new ArrayList<Long>();
-                start.setVisibility(View.GONE);
-                high_scores.setVisibility(View.GONE);
-                startGame();
+                tour = 1;                                               //Tour initialisé à 0
+                liste_scores = new ArrayList<Long>();                   //Liste des scores réinitialisée
+                start.setVisibility(View.GONE);                         //Disparition du bouton start (pour ne pas commencer une nouvelle partie)
+                high_scores.setVisibility(View.GONE);                   //Disparition du bouton high scores
+                affichage.setText("");
+                startRound();                                            //Appel méthode début de partie
             }
         });
 
-        this.catchi.setOnClickListener(new View.OnClickListener() {
+        this.catchi.setOnClickListener(new View.OnClickListener() {     //Bouton à attraper
             @Override
             public void onClick(View view) {
-                temps = System.currentTimeMillis() - starttime;
-                catchi.setVisibility(View.GONE);
-                serie.setText(String.valueOf(temps)+ "ms");
-                scores.add(temps);
-                if (tour<4) {   //tour<(n-1) avec n le nombre de parties souhaitées
-                    tour ++;
-                    startGame();
-                }else{
+                temps = System.currentTimeMillis() - starttime;         //Calcul du temps mis à cliquer
+                catchi.setVisibility(View.GONE);                        //Dès le bouton préssé, on le fait disparaître
+                affichage.setText(String.valueOf(temps)+ "ms");         //Affichage du temps en haut à gauche
+                liste_scores.add(temps);                                //On ajoute le temps au score
+                if (tour<5) {                                           //tour<(n-1) avec n le nombre de parties souhaitées
+                    tour ++;                                            //Incrémentation du nombre de tours
+                    startRound();                                        //On relance un round
+                }else{                                                  //Quand on a fini les 5 rounds
                     double total = 0;
                     double min = 100000;
-                    for (Long note : scores) {
+                    for (Long note : liste_scores) {
                         total += note;
                         if (note<min){
-                            min = note;
+                            min = note;                                 //On regarde le meilleur temps enregistré
                         }
                     }
-                    double moyenne = total / scores.size();
+                    double moyenne = total / liste_scores.size();       //Ainsi que la moyenne
 
-                    serie.setText(String.valueOf(scores) + "\nMoyenne : "+String.valueOf(moyenne));
-                    start.setVisibility(View.VISIBLE);
-                    high_scores.setVisibility(View.VISIBLE);
-                    nomJoueur(moyenne, min);
+                    affichage.setText(String.valueOf(liste_scores) + "\nMoyenne : "+String.valueOf(moyenne));   //On affiche les résultats
+                    nomJoueur(moyenne, min);                            //On actualise les highscores (demande du nom)
+                    start.setVisibility(View.VISIBLE);                  //On fait réapparaître le bouton démarrer
+                    high_scores.setVisibility(View.VISIBLE);            //Le bouton highscore
                 }
             }
         });
 
-        this.high_scores.setOnClickListener(new View.OnClickListener() {
+        this.high_scores.setOnClickListener(new View.OnClickListener() {        //Lorsqu'on clique sur high_scores, on change d'activité
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
-                startActivity(intent);
+                startActivity(intent);                                          //On va à l'activité MainActivity2
 
             }
         });
     }
 
-
-    public void startGame(){
+    public void startRound(){                        //Méthode pour lancer un round
         new Thread() {
             public void run(){
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int temps = 1000 + (int) (Math.random() * (5000 - 1000) + 1);
+                        int temps = 1000 + (int) (Math.random() * (5000 - 1000) + 1);   //Temps d'apparition aléatoire
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
@@ -123,11 +116,10 @@ public class MainActivity extends AppCompatActivity {
                         int H = metrics.heightPixels/2;
                         int x = (int) (Math.random() * (W - 0) + 1);
                         int y = (int) (Math.random() * (H - 0) + 1);
-
-                        catchi.setX(x);
+                        catchi.setX(x);                                 //Le x et le y du bouton sont aléatoires
                         catchi.setY(y);
-                        starttime = System.currentTimeMillis();
-                        catchi.setVisibility(View.VISIBLE);
+                        starttime = System.currentTimeMillis();         //On récupère le temps d'apparition du bouton (variable globale)
+                        catchi.setVisibility(View.VISIBLE);             //Et on fait réapparaitre le bouton à attraper
                     }
                 });
             }
@@ -146,11 +138,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 String s = input.getText().toString();
                 if (!s.equals("") && !s.equals(" ")) {
-                    //serie.setText(s);
                     String score = s+" : " + String.valueOf(moyenne)+"ms";
                     String score2 = s+" : " + String.valueOf(best)+"ms";
-                    save_moyenne(score,getApplicationContext());
-                    save_best(score2,getApplicationContext());
+                    save_moyenne(score,getApplicationContext());    //On écrit la moyenne dans le tableau des scores
+                    save_best(score2,getApplicationContext());      //On écrit le meilleur temps dans le tableau
 
                 }
             }
@@ -161,14 +152,11 @@ public class MainActivity extends AppCompatActivity {
                 dialogInterface.cancel();
             }
         });
-        this.nom.show();
+        this.nom.show();        //On affiche l'interface
     }
 
-    //TODO
     //Préparation du tableau des High ScoreS
-
     private void save_moyenne(String data, Context fileContext) {
-        //Méthode d'écriture sur un fichier .txt
         try {
             // Open Stream to write file.
             FileOutputStream out = fileContext.openFileOutput("save_moy.txt", Context.MODE_APPEND);

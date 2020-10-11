@@ -53,7 +53,7 @@ public class MainActivity2 extends AppCompatActivity {
             text_moy.setText(moy_aff);
 
         } catch (Exception e) {
-            Toast.makeText(fileContext,"Error:"+ e.getMessage(),Toast.LENGTH_SHORT).show();
+            //rien
         }
 
 
@@ -80,7 +80,7 @@ public class MainActivity2 extends AppCompatActivity {
             text_records.setText(records_aff);
 
         } catch (Exception e) {
-            Toast.makeText(fileContext,"Pas de High score pour l'instant",Toast.LENGTH_SHORT).show();
+            //rien
         }
 
 

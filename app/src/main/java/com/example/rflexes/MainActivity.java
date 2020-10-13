@@ -138,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 String s = input.getText().toString();
                 if (!s.equals("") && !s.equals(" ")) {
-                    String score = s+" : " + String.valueOf(moyenne)+"ms";
-                    String score2 = s+" : " + String.valueOf(best)+"ms";
+                    String score = s+" : " + String.valueOf(moyenne);
+                    String score2 = s+" : " + String.valueOf(best);
                     save_moyenne(score,getApplicationContext());    //On écrit la moyenne dans le tableau des scores
                     save_best(score2,getApplicationContext());      //On écrit le meilleur temps dans le tableau
 

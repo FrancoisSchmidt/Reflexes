@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 public class MainActivity2 extends AppCompatActivity {
     public TextView text_moy;
     public TextView text_records;
-    public ArrayList<String> moyennes;
+    public ArrayList<String[]> moyennes;
     public ArrayList<String> records;
     public String moy_aff;
     public String records_aff;
@@ -38,17 +37,36 @@ public class MainActivity2 extends AppCompatActivity {
         try {
             FileInputStream in = fileContext.openFileInput("save_moy.txt");
 
-            moyennes = new ArrayList<String>();
+            moyennes = new ArrayList<String[]>();
             BufferedReader br= new BufferedReader(new InputStreamReader(in));
 
             String s= null;
             while((s= br.readLine())!= null)  {
-                moyennes.add(s);
+                String deux[] = s.split(" : ");
+                float temps = Float.parseFloat(deux[1]);
+                moyennes.add(deux);
             }
 
             moy_aff = "";
-            for (String moyy :moyennes){
-                moy_aff += moyy+"\n";
+            Boolean change = false;
+            ArrayList<String[]> deja = new ArrayList<String[]>();
+            int compteur = 0;
+            for (int i=0; i<45; i++){
+                String[] min = new String[]{"Min", "10000"};
+                change = false;
+                for (String[] moyy : moyennes){
+                    if (!deja.contains(moyy)) {
+                        if (Float.parseFloat(moyy[1]) < Float.parseFloat(min[1]))  {
+                            min = moyy;
+                            change = true;
+                        }
+                    }
+                }
+                if (change) {
+                    deja.add(min);
+                    compteur ++;
+                    moy_aff += String.valueOf(compteur)+". "+ min[0] + " : " + min[1] + "ms" + "\n";
+                }
             }
             text_moy.setText(moy_aff);
 

@@ -181,19 +181,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-/*
-    private void erase(){
-        //Permet de réinitialiser le fichier de sauvegarde en recréant un fichier du même nom qui écrasera le précédent
-        try {
-            // Open Stream to write file.
-            FileOutputStream out = this.openFileOutput("save.txt", Context.MODE_PRIVATE);
-            out.close();
-        } catch (Exception e) {
-            //rien
-        }
-    }
-
-     */
-
 
 }

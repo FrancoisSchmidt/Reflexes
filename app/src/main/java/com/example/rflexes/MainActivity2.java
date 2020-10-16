@@ -3,15 +3,20 @@ package com.example.rflexes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
@@ -22,6 +27,7 @@ public class MainActivity2 extends AppCompatActivity {
     public ArrayList<String[]> records;
     public String moy_aff;
     public String records_aff;
+    public AlertDialog.Builder validation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +61,24 @@ public class MainActivity2 extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(this, "Failing reset", Toast.LENGTH_SHORT).show();
+            this.validation = new AlertDialog.Builder(this);
+            validation.setTitle("Réinitialiser les scores ?");
+            validation.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    erase();
+                    load_moyennes(getApplicationContext());
+                    load_records(getApplicationContext());
+                }
+            });
+            validation.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            });
+            this.validation.show();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -149,6 +172,17 @@ public class MainActivity2 extends AppCompatActivity {
         }
     }
 
-
+    private void erase(){
+        //Permet de réinitialiser le fichier de sauvegarde en recréant un fichier du même nom qui écrasera le précédent
+        try {
+            // Open Stream to write file.
+            FileOutputStream out = this.openFileOutput("save_records.txt", Context.MODE_PRIVATE);
+            FileOutputStream out2 = this.openFileOutput("save_moy.txt", Context.MODE_PRIVATE);
+            out.close();
+            out2.close();
+        } catch (Exception e) {
+            Toast.makeText(this, "Reset fail", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

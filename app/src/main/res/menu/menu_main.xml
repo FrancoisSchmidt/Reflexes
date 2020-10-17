@@ -6,5 +6,6 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="Reset high scores"
-        app:showAsAction="never" />
+        android:icon="@mipmap/sanic"
+        app:showAsAction="always" />
 </menu>

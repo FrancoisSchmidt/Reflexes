@@ -11,7 +11,7 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
             android:name=".MainActivity2"
-            android:label="High Schores" />
+            android:label="High Scores" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">

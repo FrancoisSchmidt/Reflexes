@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -106,16 +107,16 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        int temps = 1000 + (int) (Math.random() * (5000 - 1000) + 1);   //Temps d'apparition aléatoire
+                        int temps = 1000 + (int) (Math.random() * (4000 - 1000) + 1);   //Temps d'apparition aléatoire
                         try {
-                            Thread.sleep(100);
+                            Thread.sleep(temps);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        int W = metrics.widthPixels/2;
-                        int H = metrics.heightPixels/2;
-                        int x = (int) (Math.random() * (W - 0) + 1);
-                        int y = (int) (Math.random() * (H - 0) + 1);
+                        int W = metrics.widthPixels-100;
+                        int H = metrics.heightPixels-100;
+                        int x = (int) (Math.random() * (W - 100) + 1);
+                        int y = (int) (Math.random() * (H - 100) + 1);
                         catchi.setX(x);                                 //Le x et le y du bouton sont aléatoires
                         catchi.setY(y);
                         starttime = System.currentTimeMillis();         //On récupère le temps d'apparition du bouton (variable globale)
@@ -138,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 String s = input.getText().toString();
                 if (!s.equals("") && !s.equals(" ")) {
+                    if (s.substring(s.length() - 1).equals(" ")){
+                        s = s.substring(0,s.length()-1);
+                    }
                     String score = s+" : " + String.valueOf(moyenne);
                     String score2 = s+" : " + String.valueOf(best);
                     save_moyenne(score,getApplicationContext());    //On écrit la moyenne dans le tableau des scores

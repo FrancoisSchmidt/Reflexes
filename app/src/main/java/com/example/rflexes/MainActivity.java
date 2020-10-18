@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public Button start;
     public Button catchi;
     public Button high_scores;
+    public Button multi;
     public ConstraintLayout lay;
     public long starttime;
     public ArrayList<Long> liste_scores;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         this.affichage = findViewById(R.id.affichage);      //Affichage des scores en haut à gauche de l'écran
         this.start = findViewById(R.id.start);              //Bouton pour démarer une partie
         this.high_scores = findViewById(R.id.high_scores);  //Bouton pour afficher les high_scores
+        this.multi = findViewById(R.id.multi);
         this.lay = findViewById(R.id.lay);                  //Layout
         this.liste_scores = new ArrayList<Long>();          //Liste contenant tous les scores d'une partie
 
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 liste_scores = new ArrayList<Long>();                   //Liste des scores réinitialisée
                 start.setVisibility(View.GONE);                         //Disparition du bouton start (pour ne pas commencer une nouvelle partie)
                 high_scores.setVisibility(View.GONE);                   //Disparition du bouton high scores
+                multi.setVisibility(View.GONE);
                 affichage.setText("");
                 startRound();                                            //Appel méthode début de partie
             }
@@ -87,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     nomJoueur(moyenne, min);                            //On actualise les highscores (demande du nom)
                     start.setVisibility(View.VISIBLE);                  //On fait réapparaître le bouton démarrer
                     high_scores.setVisibility(View.VISIBLE);            //Le bouton highscore
+                    multi.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -183,6 +187,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             //rien
         }
+    }
+
+    public void multi(View v){
+        Intent intent = new Intent(this, MainActivity3.class);
+        startActivity(intent);
     }
 
 

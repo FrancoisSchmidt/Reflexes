@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/sanic"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".MainActivity3"></activity>
         <activity
             android:name=".MainActivity2"
             android:label="High Scores" />

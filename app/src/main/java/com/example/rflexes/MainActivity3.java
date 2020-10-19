@@ -4,10 +4,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity3 extends AppCompatActivity {
@@ -25,6 +27,9 @@ public class MainActivity3 extends AppCompatActivity {
     public AlertDialog.Builder score;
     public int score1;
     public int score2;
+    public ImageView win1;
+    public ImageView win2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,11 @@ public class MainActivity3 extends AppCompatActivity {
         this.score1 = 0;
         this.score2 = 0;
 
+        this.win1 = findViewById(R.id.win1);
+        this.win2 = findViewById(R.id.win2);
+        win1.setVisibility(View.GONE);
+        win2.setVisibility(View.GONE);
+
         this.metrics = new DisplayMetrics();                //Récupération taille de l'écran
         getWindowManager().getDefaultDisplay().getMetrics(this.metrics);
 
@@ -61,8 +71,11 @@ public class MainActivity3 extends AppCompatActivity {
                 //start_round();
                 but1 = true;
                 if (but2){
+                    joueur1.setTextColor(Color.parseColor("#FF0000"));
                     start_round();
                     score2 ++;
+                } else{
+                    joueur1.setTextColor(Color.parseColor("#00FF00"));
                 }
             }
         });
@@ -77,8 +90,11 @@ public class MainActivity3 extends AppCompatActivity {
                 //start_round();
                 but2 = true;
                 if (but1){
+                    joueur2.setTextColor(Color.parseColor("#FF0000"));
                     start_round();
                     score1 ++;
+                } else{
+                    joueur2.setTextColor(Color.parseColor("#00FF00"));
                 }
 
             }
@@ -143,6 +159,7 @@ public class MainActivity3 extends AppCompatActivity {
                             }
                             joueur1.setText("");
                             joueur2.setText("");
+                            //TODO corriger les distances, les boutons sortent du cadre
                             int W = metrics.widthPixels - 100;
                             int H = metrics.heightPixels - 100;
                             int x1 = (int) (Math.random() * (W - 100) + 1);
@@ -169,9 +186,11 @@ public class MainActivity3 extends AppCompatActivity {
     public void affich_result(){
         score = new AlertDialog.Builder(this);
         if (score1>score2) {
-            score.setTitle("Joueur 1 a gagné "+score1+" à "+score2);
+            score.setTitle("Joueur 1 a gagné "+score1+"-"+score2);
+            win1.setVisibility(View.VISIBLE);
         } else if (score2>score1){
-            score.setTitle("Joueur 2 a gagné "+score2+" à "+score1);
+            score.setTitle("Joueur 2 a gagné "+score2+"-"+score1);
+            win2.setVisibility(View.VISIBLE);
         }
         score.setPositiveButton("Ok rude", new DialogInterface.OnClickListener() {
             @Override

@@ -111,7 +111,7 @@ public class MainActivity3 extends AppCompatActivity {
                         try {
                             Thread.sleep(2000);
                             joueur1.setText("Prêt ?");
-                            joueur2.setText("Pret ?");
+                            joueur2.setText("Prêt ?");
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -159,12 +159,11 @@ public class MainActivity3 extends AppCompatActivity {
                             }
                             joueur1.setText("");
                             joueur2.setText("");
-                            //TODO corriger les distances, les boutons sortent du cadre
-                            int W = metrics.widthPixels - 100;
-                            int H = metrics.heightPixels - 100;
-                            int x1 = (int) (Math.random() * (W - 100) + 1);
-                            int y1 = (int) (Math.random() * (H / 2 - 100) + H / 2);
-                            int x2 = (int) (Math.random() * (W - 100) + 1);
+                            int W = metrics.widthPixels - 200;
+                            int H = metrics.heightPixels - 250;
+                            int x1 = (int) (Math.random() * (W - 25) + 1);
+                            int y1 = (int) (Math.random() * (H / 2 - 100) + H/2 + 125);
+                            int x2 = (int) (Math.random() * (W - 25) + 1);
                             int y2 = (int) (Math.random() * (H / 2 - 100) + 1);
                             catchi1.setX(x1);                                 //Le x et le y du bouton sont aléatoires
                             catchi1.setY(y1);
